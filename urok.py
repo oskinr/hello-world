@@ -76,15 +76,9 @@ def print_list():
     #modified_list = ', '.join([str(element) for element in df])
     #df = ['товар', 'площадь']
    
-    df= ',  '.join(column_listbox.get(0, END))
-   
-
-
-    modified_list = df
-
-
-   
-    df2 = df1[modified_list]
+   df = " ".join(column_listbox.get(0, END))
+   modified_list = (df.split())
+   df2 = df1[modified_list]
    
    
   
