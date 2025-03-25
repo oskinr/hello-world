@@ -1,4 +1,3 @@
-
 from tkinter import ttk
 from openpyxl import *
 from tkinter import * 
@@ -10,8 +9,7 @@ from tkinter.ttk import Combobox
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog
 import xml.etree.ElementTree as ET
-
-
+import numpy as np
 
 
 
@@ -36,7 +34,7 @@ def add():
 
       
 def red():  
-    global d,a,c,b,st1,st2,df1
+    global d,a,c,b,st1,st2,df1,df2
     rows=combo.get()
     
     df1 = pd.read_excel(selected_file, header=0, skiprows=int(rows))
@@ -61,7 +59,15 @@ def red():
     combo2['values'] = col_name
     label3.configure(text=df1)        
 
-    
+def highlight_col(x):
+    #copy df to new - original data are not changed
+    df = x.copy()
+    #set by condition
+    mask = df['Количество'] == 23
+    df.loc[mask, :] = 'background-color: yellow'
+    df.loc[~mask,:] = 'background-color: white'
+    return df 
+
 def remove_text():
     #languages_listbox.config(text="")
     label3.config(text="")
@@ -71,25 +77,55 @@ def remove_text():
 def print_list():
     print(column_listbox.get(0, END))
     #df = (column_listbox.get(0, END))
-    # modified_list = str(df).replace('(', '').replace(')', '')
-    # modified_list = str(df).replace('(', '').replace(')', '')
+    #modified_list = str(df).replace('(', '').replace(')', '')
+    #modified_list = str(df).replace('(', '').replace(')', '')
     #modified_list = ', '.join([str(element) for element in df])
     #df = ['товар', 'площадь']
    
-   df = " ".join(column_listbox.get(0, END))
-   modified_list = (df.split())
-   df2 = df1[modified_list]
-   
+    df= ' '.join(column_listbox.get(0, END))
+    #modified_list = (df.split())
+    print(df)
+    
+    modified_list = df.split()
+    print(modified_list)
+    
+  
    
   
+    
+    
+    df2 = df1[modified_list]
+   
+   
+    #df2['compare'] = df2['col1'] < df2['col2']
+    
+    #df2['compare'] = df2['Сравниваем_Файл_1'] == df2['Сравниваем_Файл_2']
+    #df2.loc[((df2['compare']= 'background-color: #D8E4BC'))]
+    
+ 
+    
+
+    df = df2
+    #df2.style.set_properties(**{'text-align': 'center','border': '1.3px solid black', 'color': 'black'})
+    #df2.describe().T.drop("count", axis=1)\
+                 #.style.highlight_max(color="darkred")
+    df2.style.apply(highlight_col, axis=None).to_excel('df2.xlsx', index=False)
     print(df2)
-    df2.to_excel('df2.xlsx')
+    #df2.style.set_properties(**{'text-align': 'center','border': '1.3px solid black', 'color': 'black'}).to_excel('df2.xlsx', index=False)
+    messagebox.showinfo("Title", "Создан фал df2.xlsx")
 
 def del_list():
     select = list(column_listbox.curselection())
     select.reverse()
     for i in select:
         column_listbox.delete(i)
+
+
+    
+  
+
+
+
 
 window = Tk()
 window.title("Сравнить файлы")
@@ -106,10 +142,10 @@ file1 = Button(window, text="читать",command=red)
 file1.grid(column=1, row=0, padx=6, pady=6, sticky=EW)
 #текстовой вывод пути к  фалам
 label1 = Label(window, text="",font="system") # создаем текстовую метку
-label1.grid(column=5, row=0, padx=6, pady=6) 
+label1.grid(column=5, row=2, padx=6, pady=6) 
 #вывод конечного файла
 label3 = Label(window, text="", justify=tk.LEFT) # создаем текстовую метку
-label3.grid(column=5, row=0, padx=6, pady=6)
+label3.grid(column=5, row=2, padx=6, pady=6)
 
 #вывод заголовков
 label4 = Label(window, text="", justify=tk.LEFT)  # создаем текстовую метку
